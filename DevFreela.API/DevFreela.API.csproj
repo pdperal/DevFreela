@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DevFreela.Core\DevFreela.Core.csproj" />
+    <ProjectReference Include="..\DevFreela.Aplicacao\DevFreela.Aplicacao.csproj" />
+    <ProjectReference Include="..\DevFreela.Infra\DevFreela.Infra.csproj" />
   </ItemGroup>
 
 </Project>

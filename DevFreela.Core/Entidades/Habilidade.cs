@@ -4,12 +4,12 @@ namespace DevFreela.Core.Entidades
 {
     public class Habilidade : EntidadeBase
     {
-        public string Description { get; private set; }
+        public string Descricao { get; private set; }
         public DateTime DataCriacao { get; private set; }
 
-        public Habilidade(string description)
+        public Habilidade(string descricao)
         {
-            Description = description;
+            Descricao = descricao;
             DataCriacao = DateTime.Now;
         }
     }

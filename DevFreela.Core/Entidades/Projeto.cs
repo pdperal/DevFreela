@@ -28,5 +28,38 @@ namespace DevFreela.Core.Entidades
             Status = ProjetoStatusEnum.Criado;
             Comentarios = new List<ComentarioProjeto>();
         }
+
+        public void Cancelar()
+        {
+            if (Status == ProjetoStatusEnum.EmAndamento || Status == ProjetoStatusEnum.Criado)
+            {
+                Status = ProjetoStatusEnum.Cancelado;
+            }           
+        }
+
+        public void Finalizar()
+        {
+            if (Status == ProjetoStatusEnum.EmAndamento)
+            {
+                Status = ProjetoStatusEnum.Finalizado;
+                DataFinalizado = DateTime.Now;
+            }
+        }
+
+        public void Iniciar()
+        {
+            if (Status == ProjetoStatusEnum.Criado)
+            {
+                Status = ProjetoStatusEnum.EmAndamento;
+                DataInicio = DateTime.Now;
+            }
+        }
+
+        public void Atualizar(string titulo, string descricao, decimal custoTotal)
+        {
+            Titulo = titulo;
+            Descricao = descricao;
+            CustoTotal = custoTotal;
+        }
     }
 }
