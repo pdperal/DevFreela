@@ -1,6 +1,6 @@
 ﻿namespace DevFreela.Aplicacao.InputModels
 {
-    public class NovoProjetoInputModel
+    public class InserirProjetoInputModel
     {
         public string Titulo { get; set; }
         public string Descricao { get; set; }

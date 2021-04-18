@@ -8,7 +8,7 @@ namespace DevFreela.Aplicacao.Servicos.Interfaces
     {
         List<ProjetoViewModel> ObterTodos(string query);
         ProjetoDetalheViewModel Obter(int id);
-        int Inserir(NovoProjetoInputModel inputModel);
+        int Inserir(InserirProjetoInputModel inputModel);
         void Atualizar(AtualizarProjetoInputModel inputModel);
         void Deletar(int id);
         void InserirComentario(InserirComentarioInputModel inputmodel);

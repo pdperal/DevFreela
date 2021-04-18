@@ -27,7 +27,9 @@ namespace DevFreela.API
                 options => options.UseSqlServer(Configuration.GetConnectionString("DevFreelaCs")));
 
             services.AddScoped<IProjetoService, ProjetoService>();
-
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IHabilidadeService, HabilidadeService>();
+                
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

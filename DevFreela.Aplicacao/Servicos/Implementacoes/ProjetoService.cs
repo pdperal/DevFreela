@@ -1,8 +1,13 @@
-﻿using DevFreela.Aplicacao.InputModels;
+﻿using Dapper;
+using DevFreela.Aplicacao.InputModels;
 using DevFreela.Aplicacao.Servicos.Interfaces;
 using DevFreela.Aplicacao.ViewModels;
 using DevFreela.Core.Entidades;
+using DevFreela.Core.Enums;
 using DevFreela.Infra.Persistencia;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +17,12 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
     public class ProjetoService : IProjetoService
     {
         private readonly DevFreelaDbContext _dbContext;
+        private readonly string _connectionString;
 
-        public ProjetoService(DevFreelaDbContext dbContext)
+        public ProjetoService(DevFreelaDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _connectionString = configuration.GetConnectionString("DevFreelaCs");
         }
 
         public void Atualizar(AtualizarProjetoInputModel inputModel)
@@ -48,10 +55,22 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
             var projeto = _dbContext.Projetos.SingleOrDefault(x => x.Id == id);
 
             projeto.Iniciar();
-            _dbContext.SaveChanges();
+            //_dbContext.SaveChanges();
+
+            using var sqlConnection = new SqlConnection(_connectionString);
+
+            var script = "UPDATE Projetos SET Status = @Status, DataInicio = @DataInicio WHERE IdProjeto = @Id";
+
+            sqlConnection.Execute(script,
+                new
+                {
+                    Status = projeto.Status,
+                    DataInicio = projeto.DataInicio,
+                    Id = id
+                });
         }
 
-        public int Inserir(NovoProjetoInputModel inputModel)
+        public int Inserir(InserirProjetoInputModel inputModel)
         {
             var projeto = new Projeto(inputModel.Titulo, inputModel.Descricao, inputModel.IdCliente, inputModel.IdFreelancer, inputModel.CustoTotal);
             _dbContext.Projetos.Add(projeto);
@@ -70,8 +89,24 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
 
         public ProjetoDetalheViewModel Obter(int id)
         {
-            var projeto = _dbContext.Projetos.SingleOrDefault(x => x.Id == id);
-            var projetoDetailModel = new ProjetoDetalheViewModel(projeto.Id, projeto.Titulo, projeto.Descricao, projeto.CustoTotal, projeto.DataInicio, projeto.DataFinalizado);
+            var projeto = _dbContext.Projetos
+                .Include(p => p.Cliente)
+                .Include(p => p.Freelancer)
+                .SingleOrDefault(x => x.Id == id);
+            if (projeto == null)
+            {
+                return null;
+            }
+
+            var projetoDetailModel = new ProjetoDetalheViewModel(
+                projeto.Id, 
+                projeto.Titulo, 
+                projeto.Descricao, 
+                projeto.CustoTotal, 
+                projeto.DataInicio, 
+                projeto.DataFinalizado,
+                projeto.Cliente.NomeCompleto,
+                projeto.Freelancer.NomeCompleto);
 
             return projetoDetailModel;
         }
