@@ -1,6 +1,6 @@
-using DevFreela.Aplicacao.Servicos.Implementacoes;
-using DevFreela.Aplicacao.Servicos.Interfaces;
+using DevFreela.Aplicacao.Commands.Inserir;
 using DevFreela.Infra.Persistencia;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,12 +25,11 @@ namespace DevFreela.API
         {
             services.AddDbContext<DevFreelaDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DevFreelaCs")));
-
-            services.AddScoped<IProjetoService, ProjetoService>();
-            services.AddScoped<IUsuarioService, UsuarioService>();
-            services.AddScoped<IHabilidadeService, HabilidadeService>();
-                
+                            
             services.AddControllers();
+
+            services.AddMediatR(typeof(InserirProjetoCommand));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DevFreela.API", Version = "v1" });

@@ -1,93 +1,109 @@
-﻿using DevFreela.API.Models;
-using DevFreela.Aplicacao.InputModels;
-using DevFreela.Aplicacao.Servicos.Interfaces;
+﻿using DevFreela.Aplicacao.Commands.AtualizarProjeto;
+using DevFreela.Aplicacao.Commands.FinalizarProjeto;
+using DevFreela.Aplicacao.Commands.IniciarProjeto;
+using DevFreela.Aplicacao.Commands.Inserir;
+using DevFreela.Aplicacao.Commands.InserirComentario;
+using DevFreela.Aplicacao.Commands.RemoverProjeto;
+using DevFreela.Aplicacao.Queries.ObterProjeto;
+using DevFreela.Aplicacao.Queries.ObterTodosProjetos;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
 {
     [Route("api/projetos")]
     public class ProjetosController : ControllerBase
     {
-        private readonly IProjetoService _projetoService;
-        public ProjetosController(IProjetoService projetoService)
+        private readonly IMediator _mediator;
+        public ProjetosController(IMediator mediator)
         {
-            _projetoService = projetoService;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public IActionResult Obter(string query)
+        public async Task<IActionResult> Obter(string query)
         {
-            var projetos = _projetoService.ObterTodos(query);
+            var queryInstancia = new ObterTodosProjetosQuery(query);
+
+            var projetos = await _mediator.Send(queryInstancia);
 
             return Ok(projetos);
         }
 
         [HttpGet("{id}")]
-        public IActionResult ObterProjeto(int id)
+        public async Task<IActionResult> ObterProjeto(int id)
         {
-            var projetos = _projetoService.Obter(id);
-            if (projetos == null)
+            var query = new ObterProjetoQuery(id);
+
+            var projeto = await _mediator.Send(query);
+            if (projeto == null)
             {
                 return NotFound();
             }
-            return Ok(projetos);
+            return Ok(projeto);
         }
 
         [HttpPost]
-        public IActionResult Inserir([FromBody] InserirProjetoInputModel model)
+        public async Task<IActionResult> Inserir([FromBody] InserirProjetoCommand command)
         {
-            if (model.Titulo.Length > 50)
+            if (command.Titulo.Length > 50)
             {
                 return BadRequest();
             }
+            var id = await _mediator.Send(command);
 
-            var id = _projetoService.Inserir(model);
-
-            return CreatedAtAction(nameof(ObterProjeto), new { id }, model);
+            return CreatedAtAction(nameof(ObterProjeto), new { id }, command);
         }
 
         [HttpPut]
-        public IActionResult Atualizar([FromBody] AtualizarProjetoInputModel model)
+        public async Task<IActionResult> Atualizar([FromBody] AtualizarProjetoCommand command)
         {
-            if (model.Descricao.Length > 200)
+            if (command.Descricao.Length > 200)
             {
                 return BadRequest();
             }
 
-            _projetoService.Atualizar(model);
+            await _mediator.Send(command);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
-            _projetoService.Deletar(id);
+            var command = new DeletarProjetoCommand(id);
+
+            await _mediator.Send(command);
 
             return NoContent();
         }
 
         [HttpPost("{id}/comentario")]
-        public IActionResult InserirComentario(int id, [FromBody] InserirComentarioInputModel inserirComentarioModel)
+        public async Task<IActionResult> InserirComentario(int id, [FromBody] InserirComentarioCommand command)
         {
-            _projetoService.InserirComentario(inserirComentarioModel);
+            await _mediator.Send(command);
 
             return NoContent();
         }
 
         [HttpPut("{id}/iniciar")]
-        public IActionResult Iniciar(int id)
+        public async Task<IActionResult> Iniciar(int id)
         {
-            _projetoService.Iniciar(id);
+            var command = new IniciarProjetoCommand(id);
+
+            await _mediator.Send(command);            
 
             return NoContent();
         }
 
         [HttpPut("{id}/finalizar")]
-        public IActionResult Finalizar(int id)
+        public async Task<IActionResult> Finalizar(int id)
         {
-            _projetoService.Finalizar(id);
+            var command = new FinalizarProjetoCommand(id);
+
+            await _mediator.Send(command);
+
             return NoContent();
         }
     }

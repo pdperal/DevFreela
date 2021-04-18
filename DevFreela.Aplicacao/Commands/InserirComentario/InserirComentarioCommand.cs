@@ -1,6 +1,8 @@
-﻿namespace DevFreela.Aplicacao.InputModels
+﻿using MediatR;
+
+namespace DevFreela.Aplicacao.Commands.InserirComentario
 {
-    public class InserirComentarioInputModel
+    public class InserirComentarioCommand : IRequest<Unit>
     {
         public string Conteudo { get; set; }
         public int IdProjeto { get; set; }

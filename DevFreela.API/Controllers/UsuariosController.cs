@@ -1,23 +1,28 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.Aplicacao.Commands.InserirUsuario;
 using DevFreela.Aplicacao.InputModels;
-using DevFreela.Aplicacao.Servicos.Interfaces;
+using DevFreela.Aplicacao.Queries.ObterUsuario;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
 {
     [Route("api/usuarios")]
     public class UsuariosController : ControllerBase
     {
-        private readonly IUsuarioService _service;
-        public UsuariosController (IUsuarioService service)
+        private readonly IMediator _mediator;
+        public UsuariosController (IMediator mediator)
         {
-            _service = service;
+            _mediator = mediator;
         }
         [HttpGet("{id}")]
-        public IActionResult ObterPorId(int id)
+        public async Task<IActionResult> Obter(int id)
         {
-            var usuario = _service.ObterUsuario(id);
-            if(usuario == null)
+            var query = new ObterUsuarioQuery(id);
+            var usuario = await _mediator.Send(query);
+
+            if (usuario == null)
             {
                 return NotFound();
             }
@@ -26,11 +31,11 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Inserir([FromBody] InserirUsuarioInputModel criarUserModel)
+        public async Task<IActionResult> Inserir([FromBody] InserirUsuarioCommand command)
         {
-            var id = _service.Inserir(criarUserModel);
+            var id = await _mediator.Send(command);
 
-            return CreatedAtAction(nameof(ObterPorId), new { id = id }, criarUserModel);
+            return CreatedAtAction(nameof(Obter), new { id = id }, command);
         }
 
         [HttpPut("{id}/logar")]
