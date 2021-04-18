@@ -23,12 +23,15 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
             var projeto = _dbContext.Projetos.SingleOrDefault(x => x.Id == inputModel.Id);
 
             projeto.Atualizar(inputModel.Titulo, inputModel.Descricao, inputModel.CustoTotal);
+            _dbContext.SaveChanges();
         }
 
         public void Deletar(int id)
         {
             var projeto = _dbContext.Projetos.SingleOrDefault(x => x.Id == id);
             projeto.Cancelar();
+
+            _dbContext.SaveChanges();
         }
 
         public void Finalizar(int id)
@@ -36,6 +39,8 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
             var projeto = _dbContext.Projetos.SingleOrDefault(x => x.Id == id);
 
             projeto.Finalizar();
+
+            _dbContext.SaveChanges();
         }
 
         public void Iniciar(int id)
@@ -43,12 +48,14 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
             var projeto = _dbContext.Projetos.SingleOrDefault(x => x.Id == id);
 
             projeto.Iniciar();
+            _dbContext.SaveChanges();
         }
 
         public int Inserir(NovoProjetoInputModel inputModel)
         {
             var projeto = new Projeto(inputModel.Titulo, inputModel.Descricao, inputModel.IdCliente, inputModel.IdFreelancer, inputModel.CustoTotal);
             _dbContext.Projetos.Add(projeto);
+            _dbContext.SaveChanges();
 
             return projeto.Id;
         }
@@ -57,6 +64,8 @@ namespace DevFreela.Aplicacao.Servicos.Implementacoes
         {
             var comentario = new ComentarioProjeto(inputmodel.Conteudo, inputmodel.IdProjeto, inputmodel.IdUsuario);
             _dbContext.Comentarios.Add(comentario);
+
+            _dbContext.SaveChanges();
         }
 
         public ProjetoDetalheViewModel Obter(int id)
