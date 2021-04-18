@@ -13,6 +13,7 @@ namespace DevFreela.Core.Entidades
         public List<HabilidadeUsuario> Habilidades { get; private set; }
         public List<Projeto> ProjetosPublicados { get; private set; }
         public List<Projeto> ProjetosFreelancer { get; private set; }
+        public List<ComentarioProjeto> Comentarios { get; private set; }
 
         public Usuario(string nomeCompleto, string email, DateTime dataNascimento)
         {

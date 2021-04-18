@@ -1,9 +1,9 @@
-using DevFreela.API.Models;
 using DevFreela.Aplicacao.Servicos.Implementacoes;
 using DevFreela.Aplicacao.Servicos.Interfaces;
 using DevFreela.Infra.Persistencia;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,9 +23,9 @@ namespace DevFreela.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<OpeningTimeOption>(Configuration.GetSection("OpeningTime"));
+            services.AddDbContext<DevFreelaDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("DevFreelaCs")));
 
-            services.AddSingleton<DevFreelaDbContext>();
             services.AddScoped<IProjetoService, ProjetoService>();
 
             services.AddControllers();

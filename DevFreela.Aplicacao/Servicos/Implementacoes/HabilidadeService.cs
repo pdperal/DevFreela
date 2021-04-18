@@ -1,11 +1,8 @@
 ﻿using DevFreela.Aplicacao.Servicos.Interfaces;
 using DevFreela.Aplicacao.ViewModels;
 using DevFreela.Infra.Persistencia;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevFreela.Aplicacao.Servicos.Implementacoes
 {

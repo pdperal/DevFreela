@@ -9,7 +9,9 @@ namespace DevFreela.Core.Entidades
         public string Titulo { get; private set; }
         public string Descricao { get; private set; }
         public int IdCliente { get; private set; }
+        public Usuario Cliente { get; private set; }
         public int IdFreelancer { get; private set; }
+        public Usuario Freelancer { get; private set; }
         public decimal CustoTotal { get; private set; }
         public DateTime DataCriacao { get; private set; }
         public DateTime? DataInicio { get; private set; }
