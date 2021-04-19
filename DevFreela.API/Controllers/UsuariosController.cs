@@ -4,6 +4,7 @@ using DevFreela.Aplicacao.InputModels;
 using DevFreela.Aplicacao.Queries.ObterUsuario;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers

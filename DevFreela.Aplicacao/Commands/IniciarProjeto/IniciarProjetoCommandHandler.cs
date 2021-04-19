@@ -13,12 +13,10 @@ namespace DevFreela.Aplicacao.Commands.IniciarProjeto
     public class IniciarProjetoCommandHandler : IRequestHandler<IniciarProjetoCommand>
     {
         private readonly IProjetoRepository _repository;
-        private readonly string _connectionString;
 
-        public IniciarProjetoCommandHandler(IProjetoRepository repository, IConfiguration configuration)
+        public IniciarProjetoCommandHandler(IProjetoRepository repository)
         {
-            _repository = repository;
-            _connectionString = configuration.GetConnectionString("DevFreelaCs");
+            _repository = repository;            
         }
 
         public async Task<Unit> Handle(IniciarProjetoCommand command, CancellationToken cancellationToken)

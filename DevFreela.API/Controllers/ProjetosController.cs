@@ -8,6 +8,7 @@ using DevFreela.Aplicacao.Queries.ObterProjeto;
 using DevFreela.Aplicacao.Queries.ObterTodosProjetos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
@@ -47,10 +48,6 @@ namespace DevFreela.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Inserir([FromBody] InserirProjetoCommand command)
         {
-            if (command.Titulo.Length > 50)
-            {
-                return BadRequest();
-            }
             var id = await _mediator.Send(command);
 
             return CreatedAtAction(nameof(ObterProjeto), new { id }, command);

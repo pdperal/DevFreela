@@ -1,7 +1,10 @@
+using DevFreela.API.Filters;
 using DevFreela.Aplicacao.Commands.Inserir;
+using DevFreela.Aplicacao.Validators;
 using DevFreela.Core.Repositories;
 using DevFreela.Infra.Persistencia;
 using DevFreela.Infra.Persistencia.Repositorios;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,7 +35,11 @@ namespace DevFreela.API
             services.AddScoped<IHabilidadeRepository, HabilidadeRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
-            services.AddControllers();
+            // FluentValidation and MediatR only need to register one random class 
+            // then all classes from same assembly will be registered
+
+            services.AddControllers(options => options.Filters.Add(typeof(ValidationFilter)))
+                .AddFluentValidation(f => f.RegisterValidatorsFromAssemblyContaining<InserirUsuarioCommandValidator>());
 
             services.AddMediatR(typeof(InserirProjetoCommand));
 
