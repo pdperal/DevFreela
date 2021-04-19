@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using DevFreela.Aplicacao.ViewModels;
+using DevFreela.Core.DTO;
+using DevFreela.Core.Repositories;
 using DevFreela.Infra.Persistencia;
 using MediatR;
 using Microsoft.Data.SqlClient;
@@ -13,23 +15,17 @@ using System.Threading.Tasks;
 
 namespace DevFreela.Aplicacao.Queries.ObterTodasHabilidades
 {
-    class ObterTodasHabilidadesQueryHandler : IRequestHandler<ObterTodasHabilidadesQuery, List<HabilidadeViewModel>>
+    class ObterTodasHabilidadesQueryHandler : IRequestHandler<ObterTodasHabilidadesQuery, List<HabilidadeDTO>>
     {
-        private readonly string _connectionString;
-        public ObterTodasHabilidadesQueryHandler(IConfiguration configuration)
+        private readonly IHabilidadeRepository _repository;
+        public ObterTodasHabilidadesQueryHandler(IHabilidadeRepository repository)
         {
-            _connectionString = configuration.GetConnectionString("DevFreelaCs");
+            _repository = repository;
         }
 
-        public async Task<List<HabilidadeViewModel>> Handle(ObterTodasHabilidadesQuery request, CancellationToken cancellationToken)
+        public async Task<List<HabilidadeDTO>> Handle(ObterTodasHabilidadesQuery request, CancellationToken cancellationToken)
         {
-            using var sqlconnection = new SqlConnection(_connectionString);
-            var script = "SELECT Id, Descricao FROM Habilidades";
-
-            var retorno = await sqlconnection
-                .QueryAsync<HabilidadeViewModel>(script);
-
-            return retorno.ToList();
+            return await _repository.ObterTodos();
         }
     }
 }

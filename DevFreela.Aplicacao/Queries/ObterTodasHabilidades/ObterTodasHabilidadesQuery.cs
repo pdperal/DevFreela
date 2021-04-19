@@ -1,10 +1,10 @@
-﻿using DevFreela.Aplicacao.ViewModels;
+﻿using DevFreela.Core.DTO;
 using MediatR;
 using System.Collections.Generic;
 
 namespace DevFreela.Aplicacao.Queries.ObterTodasHabilidades
 {
-    public class ObterTodasHabilidadesQuery : IRequest<List<HabilidadeViewModel>>
+    public class ObterTodasHabilidadesQuery : IRequest<List<HabilidadeDTO>>
     {
     }
 }

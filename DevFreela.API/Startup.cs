@@ -1,5 +1,7 @@
 using DevFreela.Aplicacao.Commands.Inserir;
+using DevFreela.Core.Repositories;
 using DevFreela.Infra.Persistencia;
+using DevFreela.Infra.Persistencia.Repositorios;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,7 +27,11 @@ namespace DevFreela.API
         {
             services.AddDbContext<DevFreelaDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DevFreelaCs")));
-                            
+
+            services.AddScoped<IProjetoRepository, ProjetoRepository>();
+            services.AddScoped<IHabilidadeRepository, HabilidadeRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
             services.AddControllers();
 
             services.AddMediatR(typeof(InserirProjetoCommand));
