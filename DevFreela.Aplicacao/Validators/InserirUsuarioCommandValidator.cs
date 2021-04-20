@@ -24,7 +24,7 @@ namespace DevFreela.Aplicacao.Validators
 
         public static bool SenhaValida(string senha)
         {
-            var regex = new Regex(@"^.*(?=.{8,}\(?=. \d)(?=.[a-z])(?=.[A-Z])(?=. [ !*@#$%^&+= ] ) . *$");
+            var regex = new Regex(@"^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!*@#$%^&+=]).*$");
 
             return regex.IsMatch(senha);
         }

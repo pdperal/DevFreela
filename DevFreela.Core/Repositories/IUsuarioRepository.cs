@@ -7,5 +7,6 @@ namespace DevFreela.Core.Repositories
     {
         Task<Usuario> ObterAsync(int id);
         Task InserirAsync(Usuario usuario);
+        Task<Usuario> ObterUsuarioAsync(string email, string senhaHash);
     }
 }

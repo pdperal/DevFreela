@@ -1,15 +1,15 @@
-﻿using DevFreela.API.Models;
-using DevFreela.Aplicacao.Commands.InserirUsuario;
-using DevFreela.Aplicacao.InputModels;
+﻿using DevFreela.Aplicacao.Commands.InserirUsuario;
+using DevFreela.Aplicacao.Commands.LoginUsuario;
 using DevFreela.Aplicacao.Queries.ObterUsuario;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
 {
     [Route("api/usuarios")]
+    [Authorize]
     public class UsuariosController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -32,6 +32,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Inserir([FromBody] InserirUsuarioCommand command)
         {
             var id = await _mediator.Send(command);
@@ -39,10 +40,17 @@ namespace DevFreela.API.Controllers
             return CreatedAtAction(nameof(Obter), new { id = id }, command);
         }
 
-        [HttpPut("{id}/logar")]
-        public IActionResult Login(int id, [FromBody] LogarModel logarModel)
+        [HttpPut("logar")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginUsuarioCommand logarModel)
         {
-            return NoContent();
+            var loginModel = await _mediator.Send(logarModel);
+            if (loginModel == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(loginModel);
         }
     }
 }

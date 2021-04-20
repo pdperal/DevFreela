@@ -25,5 +25,12 @@ namespace DevFreela.Infra.Persistencia.Repositorios
             await _dbContext.Usuarios.AddAsync(usuario);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<Usuario> ObterUsuarioAsync(string email, string senhaHash)
+        {
+            return await _dbContext
+                .Usuarios
+                .SingleOrDefaultAsync(u => u.Email == email && u.Senha == senhaHash);
+        }
     }
 }

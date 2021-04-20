@@ -7,13 +7,14 @@ using DevFreela.Aplicacao.Commands.RemoverProjeto;
 using DevFreela.Aplicacao.Queries.ObterProjeto;
 using DevFreela.Aplicacao.Queries.ObterTodosProjetos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
 {
     [Route("api/projetos")]
+    [Authorize]
     public class ProjetosController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,6 +24,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "freelancer, client")]
         public async Task<IActionResult> Obter(string query)
         {
             var queryInstancia = new ObterTodosProjetosQuery(query);
@@ -33,6 +35,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "freelancer, client")]
         public async Task<IActionResult> ObterProjeto(int id)
         {
             var query = new ObterProjetoQuery(id);
@@ -46,6 +49,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> Inserir([FromBody] InserirProjetoCommand command)
         {
             var id = await _mediator.Send(command);
@@ -54,6 +58,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> Atualizar([FromBody] AtualizarProjetoCommand command)
         {
             if (command.Descricao.Length > 200)
@@ -67,6 +72,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> Deletar(int id)
         {
             var command = new DeletarProjetoCommand(id);
@@ -77,6 +83,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPost("{id}/comentario")]
+        [Authorize(Roles = "client, freelancer")]
         public async Task<IActionResult> InserirComentario(int id, [FromBody] InserirComentarioCommand command)
         {
             await _mediator.Send(command);
@@ -85,6 +92,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPut("{id}/iniciar")]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> Iniciar(int id)
         {
             var command = new IniciarProjetoCommand(id);
@@ -95,6 +103,7 @@ namespace DevFreela.API.Controllers
         }
 
         [HttpPut("{id}/finalizar")]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> Finalizar(int id)
         {
             var command = new FinalizarProjetoCommand(id);

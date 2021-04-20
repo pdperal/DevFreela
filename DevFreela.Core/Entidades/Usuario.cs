@@ -14,8 +14,10 @@ namespace DevFreela.Core.Entidades
         public List<Projeto> ProjetosPublicados { get; private set; }
         public List<Projeto> ProjetosFreelancer { get; private set; }
         public List<ComentarioProjeto> Comentarios { get; private set; }
+        public string Senha { get; private set; }
+        public string Role { get; private set; }
 
-        public Usuario(string nomeCompleto, string email, DateTime dataNascimento)
+        public Usuario(string nomeCompleto, string email, DateTime dataNascimento, string senha, string role)
         {
             NomeCompleto = nomeCompleto;
             Email = email;
@@ -24,6 +26,8 @@ namespace DevFreela.Core.Entidades
             ProjetosPublicados = new List<Projeto>();
             ProjetosFreelancer = new List<Projeto>();
             Ativo = true;
+            Senha = senha;
+            Role = role;
         }
     }
 }

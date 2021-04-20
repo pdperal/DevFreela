@@ -9,5 +9,6 @@ namespace DevFreela.Aplicacao.Commands.InserirUsuario
         public string Senha { get; set; }
         public string Email { get; set; }
         public DateTime DataNascimento { get; set; }
+        public string Role { get; set; }
     }
 }
